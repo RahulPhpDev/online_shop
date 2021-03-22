@@ -1,11 +1,17 @@
 <?php
 
-namespace App\Http\Resources\Api\Admin;
+namespace App\Http\Resources\Api\Customer;
 
-use Illuminate\Http\Resources\Json\JsonResource;
 use App\Enums\ResponseMessages;
-class SiteContentResource extends JsonResource
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class EmptyResource extends JsonResource
 {
+
+  public function __construct()
+  {
+    
+  }
     /**
      * Transform the resource into an array.
      *
@@ -14,16 +20,10 @@ class SiteContentResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-               'id' => $this->id, 
-               'title' => $this->title, 
-               'slug' => $this->slug, 
-               'description' => $this->description, 
-               'visible' => $this->visible
-        ];
+        return [];
     }
 
-    /**
+      /**
      * Get additional data that should be returned with the resource array.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -33,7 +33,7 @@ class SiteContentResource extends JsonResource
     {
       return [
          'result' => 1,
-          'msg' => ResponseMessages::PAGES
+          'msg' => ResponseMessages::EMPTY
       ];
     }
 }

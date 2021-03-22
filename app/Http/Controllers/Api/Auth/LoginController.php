@@ -2,35 +2,67 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Enums\RoleEnums;
 use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use App\User;
 
 class LoginController extends Controller
 {
-    public function login (Request $request) {
+
+    public function otp(Request $request)
+    {
+        
         $validator = Validator::make($request->all(), [
-            'email' => 'required',
-            'password' => 'required',
+            'phone' => 'required',
+            'country_code' => 'required',
         ]);
         if ($validator->fails())
         {
             return response(['errors'=>$validator->errors()->all()], 422);
         }
-        $user = User::where('email', $request->email)->first();
+        $password =   rand(1000,9999);
+        $user = User::firstOrCreate(['phone' => $request->phone], ['country_code' => $request->country_code, 'role_id' => RoleEnums::CUSTOMER]);
+        $user->password = $password;
+        $user->save();
+
+        return response()->json([
+            'result' => 1,
+            'msg' => 'Otp send',
+            'otp' => $password
+        ]);
+    }
+
+    public function login (Request $request) {
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required',
+            'otp' => 'required',
+            'country_code' => 'required',
+        ]);
+        if ($validator->fails())
+        {
+            return response(['errors'=>$validator->errors()->all()], 422);
+        }
+        $user = User::where('phone', $request->phone)->where('country_code', $request->country_code)->first();
         if ($user) {
-            if (Hash::check($request->password, $user->password)) {
+
+            if (Hash::check($request->otp, $user->password)) {
                 $token = $user->createToken('authToken')->accessToken;
-                $response = ['token' => $token];
+                $user->token = $token;
+                $response = [
+                                'result' => 1,
+                              'msg' => 'Otp Verified',
+                              'data' => $user
+                          ];
                 return response($response, 200);
             } else {
-                $response = ["message" => "Password mismatch"];
+                $response = ["message" => "Otp mismatch"];
                 return response($response, 422);
             }
         } else {
-            $response = ["message" =>'User does not exist'];
+            $response = ["message" =>'Otp does not exist'];
             return response($response, 422);
         }
     }
@@ -38,7 +70,11 @@ class LoginController extends Controller
     public function logout (Request $request) {
         $token = $request->user()->token();
         $token->revoke();
-        $response = ['message' => 'You have been successfully logged out!'];
+        $response = [
+               'result' => 1,
+              'msg' => 'You have been successfully logged out!',
+              'data' => []
+          ];
         return response($response, 200);
     }
 

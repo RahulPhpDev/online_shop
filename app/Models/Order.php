@@ -33,7 +33,8 @@ class Order extends Model
 
     public function scopeUser($query)
     {
-        return $query->whereUserId(\Auth::id());
+        // return $query->whereUserId(\Auth::id());
+        return $query->whereUserId(4);
     }
 
     public function product()

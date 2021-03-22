@@ -16,6 +16,7 @@ class CartController extends Controller
      public function index()
      {
      	$carts = Cart::with('cartProducts')->first();
+
  		return new CartResource($carts);
      }
 

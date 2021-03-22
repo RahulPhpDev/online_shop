@@ -20,11 +20,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => ['cors', 'json.response']], function () {
 
+    Route::post('/otp', 'Auth\LoginController@otp')->name('login.otp');
     Route::post('/login', 'Auth\LoginController@login')->name('login.api');
     Route::post('/register','Auth\RegisterController@register')->name('register.api');
-    Route::get('/site-content/{id?}', 'Guest\GuestController@siteContent');
-    Route::get('/banner/{id?}', 'Guest\GuestController@banner');
-    Route::get('/product/{id?}', 'Guest\GuestController@product');
+    // Route::get('/site-content/{id?}', 'Guest\GuestController@siteContent');
+    // Route::get('/banner/{id?}', 'Guest\GuestController@banner');
+    // Route::get('/product/{id?}', 'Guest\GuestController@product');
 
     Route::get('/testing/{str?}', 'Guest\GuestController@testing');
 
@@ -32,12 +33,19 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         'as' => 'customer.',
     	'middleware' => [
     		'api',
-    		'auth:api',
-    		'api.customer'
+    		// 'auth:api',
+    		// 'api.customer'
     	],
     	'prefix' => 'customer',
     	'namespace' => 'Customer',
     ], function ()  {
+        Route::get('/home', 'HomeController@index');
+        Route::get('/pages/{id?}', 'HomeController@siteContent');
+        Route::post('/pages', 'HomeController@show');
+        Route::get('/banner/{id?}', 'HomeController@banner');
+        Route::post('/banner', 'HomeController@showBanner');
+
+        Route::get('/product/{id?}', 'HomeController@product');
             Route::apiResource('/cart','CartController')->only('index', 'store');
             Route::delete('cart/{cartId}/cart-product/{productId}/remove', 
                     'CartController@removeProductFromCart')->name('cart.remove.product');

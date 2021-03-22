@@ -17,6 +17,11 @@ class CustomerMiddleware
      */
     public function handle($request, Closure $next)
     {
+       
+        if ( app()->environment('local') )
+        {
+               return $next($request);
+        }
         if ( Auth::guard('api')->check() && request()->user()->role_id === RoleEnums::CUSTOMER) {
              return $next($request);
         } 

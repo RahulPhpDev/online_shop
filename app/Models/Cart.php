@@ -16,7 +16,8 @@ class Cart extends Model
     protected static function booted()
     {
         static::addGlobalScope('myCart', function ($query) {
-                $query->where('user_id' , Auth::id());
+                $query->where('user_id' , 4);
+                // $query->where('user_id' , Auth::id());
         });
     }
 

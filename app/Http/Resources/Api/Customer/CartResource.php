@@ -5,6 +5,7 @@ namespace App\Http\Resources\Api\Customer;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\MissingValue;
 use Illuminate\Support\Collection;
+use App\Enums\ResponseMessages;
 class CartResource extends JsonResource
 {
     /**
@@ -15,6 +16,7 @@ class CartResource extends JsonResource
      */
     public function toArray($request)
     {
+    if ( !$this->resource) return [ ];
       $collection =  $this->productCollection($this->whenLoaded('cartProducts'));
         return [
             'id' => $this->id,
@@ -42,5 +44,20 @@ class CartResource extends JsonResource
                             'total_price' => $data->product->price * $data->quantity,
                         ];
            });
+    }
+
+
+    /**
+     * Get additional data that should be returned with the resource array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function with($request)
+    {
+        return [
+           'result' => 1,
+            'msg' =>  ResponseMessages::CARTRESPONSE,
+        ];
     }
 }
