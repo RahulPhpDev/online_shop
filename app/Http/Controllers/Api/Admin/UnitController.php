@@ -7,7 +7,7 @@ use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\PaginationEnum;
-use App\Http\Resources\Api\Admin\UnitResource;
+use App\Http\Resources\Api\Admin\{UnitResource,UnitCollection};
 use App\Http\Requests\Api\Admin\UnitRequest;
 
 class UnitController extends Controller
@@ -20,7 +20,7 @@ class UnitController extends Controller
     public function index()
     {
         $units = Unit::paginate(PaginationEnum::CommonPagination);
-        return UnitResource::collection($units);
+        return new UnitCollection($units);
     }
 
     /**

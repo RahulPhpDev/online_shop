@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Admin\SiteContentRequest;
-use App\Http\Resources\Api\Admin\SiteContentResource;
+use App\Http\Resources\Api\Admin\{SiteContentResource,SiteContentCollection};
 use App\Models\SiteContent;
 use Illuminate\Http\Request;
 
@@ -18,7 +18,7 @@ class SiteContentController extends Controller
     public function index()
     {
        $records = SiteContent::all();
-       return SiteContentResource::collection($records);
+       return new SiteContentCollection($records);
        
     }
 
