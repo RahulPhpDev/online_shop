@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::middleware('auth:api')->post('/logout','Auth\LoginController@logout')->name('logout.api');
+Route::middleware('auth:api')->group( function() {
+    Route::apiResource('notifcation', 'Auth\NotificationContoller')->only(['index', 'update', 'destroy']);
+    Route::get('notifcation/unread', 'Auth\NotificationContoller@unread');
+});
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -33,8 +37,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         'as' => 'customer.',
     	'middleware' => [
     		'api',
-    		// 'auth:api',
-    		// 'api.customer'
+    		'auth:api',
+    		'api.customer'
     	],
     	'prefix' => 'customer',
     	'namespace' => 'Customer',
@@ -44,13 +48,14 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::post('/pages', 'HomeController@show');
         Route::get('/banner/{id?}', 'HomeController@banner');
         Route::post('/banner', 'HomeController@showBanner');
+        Route::apiResource('favourite-product', 'FavouriteProductController')->only('index', 'store', 'destroy');
 
         Route::get('/product/{id?}', 'HomeController@product');
-            Route::apiResource('/cart','CartController')->only('index', 'store');
-            Route::delete('cart/{cartId}/cart-product/{productId}/remove', 
-                    'CartController@removeProductFromCart')->name('cart.remove.product');
-            Route::apiResource('address','AddressController');
-            Route::apiResource('order','OrderController');
+        Route::apiResource('/cart','CartController')->only('index', 'store');
+        Route::delete('cart/{cartId}/cart-product/{productId}/remove', 
+                'CartController@removeProductFromCart')->name('cart.remove.product');
+        Route::apiResource('address','AddressController');
+        Route::apiResource('order','OrderController');
     });
 });
 

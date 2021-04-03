@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Traits\WithAndWhereHas;
 
 class Product extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, WithAndWhereHas;
 
     protected $fillable = [
         'product_uuid',
@@ -22,6 +24,8 @@ class Product extends Model
         'available',
         'feature'
     ];
+
+    protected $appends = ['is_my_fav'];
   
     protected $with = ['unit'];
 
@@ -55,6 +59,12 @@ class Product extends Model
     {
         return 'product_uuid';
     }
+
+    public function getIsMyFavAttribute()
+    {
+        if (! \Auth::check() ) return false;
+       return  $this->isMyFavProduct() ;
+    }
     /**
      * @return BelongsTo
      */
@@ -85,5 +95,15 @@ class Product extends Model
     public function imageable()
     {
         return $this->morphMany(Image::class , 'imageable');
+    }
+
+    public function favouriteProduct()
+    {
+        return $this->belongsToMany(User::class, 'user_favourite_product')->where('user_id', \Auth::id());
+    }
+
+    public function isMyFavProduct()
+    {
+          return $this->belongsToMany(User::class, 'user_favourite_product')->exists();
     }
 }

@@ -21,7 +21,8 @@ class HomeResourceCollection extends ResourceCollection
       $cartData =  $this->getKeyValueData($this->resource['cart'],'cart');
       $orders =  $this->getKeyValueData($this->resource['orders'], 'orders');
       $coupen =  $this->getKeyValueData($this->resource['coupen'], 'coupen');
-     return [ $pageData, $bannerData, $productData, $cartData, $orders, $coupen];
+      $notification =  $this->getKeyValueData($this->resource['unread_notification'], 'unread_notification');
+     return [ $pageData, $bannerData, $productData, $cartData, $orders, $coupen,$notification];
     }
 
      /**

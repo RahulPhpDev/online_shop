@@ -16,7 +16,7 @@ class ProductRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->role_id === RoleEnums::ADMIN;;
+        return $this->user()->role_id === RoleEnums::ADMIN;
     }
 
     /**

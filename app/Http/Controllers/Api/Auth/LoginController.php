@@ -37,18 +37,34 @@ class LoginController extends Controller
 
     public function login (Request $request) {
         $validator = Validator::make($request->all(), [
-            'phone' => 'required',
-            'otp' => 'required',
-            'country_code' => 'required',
+
+            // 'phone' => 'required',
+            // 'otp' => 'required',
+            // 'country_code' => 'required',
+
+            'email' => 'required_with:password',
+            'password' => 'required_with:email',
+
+             'phone' => 'required_with_all:otp',
+            'otp' => 'required_with_all:phone',
+            'country_code' => 'required_with_all:phone,',
+
         ]);
         if ($validator->fails())
         {
             return response(['errors'=>$validator->errors()->all()], 422);
         }
-        $user = User::where('phone', $request->phone)->where('country_code', $request->country_code)->first();
-        if ($user) {
 
-            if (Hash::check($request->otp, $user->password)) {
+        $matchForPassword = $request->password ?? $request->otp; 
+        if ( $request->email){
+          $user = User::where('email', $request->email)->first();
+        } else {
+        $user = User::where('phone', $request->phone)->where('country_code', $request->country_code)->first();
+        }
+
+
+        if ($user) {
+            if (Hash::check($matchForPassword, $user->password)) {
                 $token = $user->createToken('authToken')->accessToken;
                 $user->token = $token;
                 $response = [

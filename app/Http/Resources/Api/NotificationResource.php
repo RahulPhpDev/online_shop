@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Api\Admin;
+namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class BannerResource extends JsonResource
+class NotificationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,14 +14,7 @@ class BannerResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            "id" =>  $this->id,
-            "title" => $this->title,
-            "slug" => $this->slug,
-            "description" => $this->description,
-            "created_at" => $this->created_at,
-            'imageable' => $this->whenLoaded('imageable')
-        ];
+        return parent::toArray($request);
     }
 
        /**

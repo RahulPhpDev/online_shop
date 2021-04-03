@@ -16,6 +16,8 @@ class CreateCoupensTable extends Migration
         Schema::create('coupens', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('code', 20);
+            $table->longText('description')->nullable();
             $table->tinyInteger('type')->default(1);
             $table->date('expire_at')->nullable();
             $table->string('discount')->nullable();

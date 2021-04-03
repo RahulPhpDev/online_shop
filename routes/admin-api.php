@@ -25,4 +25,8 @@ Route::apiResources([
 Route::post('/product/add-image/{id}', 'ProductController@addImage');
 Route::delete('/product/{id}/delete-image/{imageId}', 'ProductController@deleteImage');
 Route::apiResource('order', 'AdminOrderController')->only('index','show');
+Route::apiResource('coupen', 'CoupenController');
+Route::post('coupen/add-product', 'CoupenController@addProduct');
+Route::post('coupen/remove-product', 'CoupenController@removeProduct');
+
 Route::put('order/{id}/update-status', 'AdminOrderController@updateStatus');

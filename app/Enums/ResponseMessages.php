@@ -16,4 +16,5 @@ final class ResponseMessages extends Enum
     const CARTRESPONSE = 'Cart Date';
     const PAGES = 'pages';
     const EMPTY  = 'empty';
+    const SUCCESS = 'success';
 }

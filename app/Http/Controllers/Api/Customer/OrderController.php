@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\Customer;
 use App\Enums\PaginationEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Customer\OrderRequest;
+use App\Http\Resources\Api\Customer\
+{OrderCollection,OrderResource};
 use App\Models\Order;
 use App\Models\Product;
 use App\Notifications\OrderCreatedNotification;
@@ -19,7 +21,8 @@ class OrderController extends Controller
     public function index()
     {
        $order = Order::user()->with('product')->latest()->paginate(PaginationEnum::CommonPagination);
-       return $order;
+       return  new OrderCollection($order);
+       
 
     }
 
@@ -53,7 +56,7 @@ class OrderController extends Controller
             $order->loadMissing('product')
        ));
        // need to modify here need to send some other record
-         return $order;
+         return new OrderResource($order);
     }
 
     private function mapProductWithQuantity($payload)

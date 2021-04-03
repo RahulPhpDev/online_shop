@@ -26,6 +26,7 @@ class HomeController extends Controller
 
 	public function index()
 	{
+		
 			$siteContent = SiteContent::toBase()->get();
 			$banner = Banner::query()->with('imageable')->get();
 			$product = Product::query()->with('imageable')->get();
@@ -38,7 +39,8 @@ class HomeController extends Controller
 					'banner'=> $banner,
 					'cart' => $carts,
 					'orders' => $orders,
-					'coupen' => $Coupen
+					'coupen' => $coupen,
+					'unread_notification' => \Auth::user()->unreadNotifications
 				],
 				'product' , $product
 			);

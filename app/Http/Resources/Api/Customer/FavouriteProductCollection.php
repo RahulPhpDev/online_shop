@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Resources\Api\Admin;
+namespace App\Http\Resources\Api\Customer;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class CoupenResource extends JsonResource
+class FavouriteProductCollection extends ResourceCollection
 {
     /**
-     * Transform the resource into an array.
+     * Transform the resource collection into an array.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array
@@ -17,7 +17,7 @@ class CoupenResource extends JsonResource
         return parent::toArray($request);
     }
 
-      /**
+     /**
      * Get additional data that should be returned with the resource array.
      *
      * @param  \Illuminate\Http\Request  $request
