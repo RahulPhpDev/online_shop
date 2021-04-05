@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Api\Admin;
+namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Enums\RoleEnums;
 
-class UnitRequest extends FormRequest
+class RegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +13,7 @@ class UnitRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->role_id === RoleEnums::ADMIN;
+        return true;
     }
 
     /**
@@ -25,9 +24,9 @@ class UnitRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'string', 'min:2', 'max:20'],
-            'abbreviation' => ['required', 'string', 'min:1', 'max:6'],
+              'phone' => 'required|unique:users',
+            'country_code' => 'required',
+            'gender' => 'nullable'
         ];
     }
-
 }

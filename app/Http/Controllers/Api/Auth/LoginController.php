@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Enums\RoleEnums;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\LoginRequest;
+use App\Http\Requests\Api\OtpRequest;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -12,17 +14,9 @@ use Illuminate\Support\Facades\Validator;
 class LoginController extends Controller
 {
 
-    public function otp(Request $request)
+    public function otp(OtpRequest $request)
     {
-        
-        $validator = Validator::make($request->all(), [
-            'phone' => 'required',
-            'country_code' => 'required',
-        ]);
-        if ($validator->fails())
-        {
-            return response(['errors'=>$validator->errors()->all()], 422);
-        }
+      
         $password =   rand(1000,9999);
         $user = User::firstOrCreate(['phone' => $request->phone], ['country_code' => $request->country_code, 'role_id' => RoleEnums::CUSTOMER]);
         $user->password = $password;
@@ -35,26 +29,8 @@ class LoginController extends Controller
         ]);
     }
 
-    public function login (Request $request) {
-        $validator = Validator::make($request->all(), [
 
-            // 'phone' => 'required',
-            // 'otp' => 'required',
-            // 'country_code' => 'required',
-
-            'email' => 'required_with:password',
-            'password' => 'required_with:email',
-
-             'phone' => 'required_with_all:otp',
-            'otp' => 'required_with_all:phone',
-            'country_code' => 'required_with_all:phone,',
-
-        ]);
-        if ($validator->fails())
-        {
-            return response(['errors'=>$validator->errors()->all()], 422);
-        }
-
+    public function login (LoginRequest $request) {
         $matchForPassword = $request->password ?? $request->otp; 
         if ( $request->email){
           $user = User::where('email', $request->email)->first();
@@ -74,11 +50,11 @@ class LoginController extends Controller
                           ];
                 return response($response, 200);
             } else {
-                $response = ["message" => "Otp mismatch"];
+                $response = ["msg" => "Otp mismatch", 'result' => 0 , 'data' => null];
                 return response($response, 422);
             }
         } else {
-            $response = ["message" =>'Otp does not exist'];
+            $response = ["msg" =>'Otp does not exist', 'result' => 0 , 'data' => null];
             return response($response, 422);
         }
     }

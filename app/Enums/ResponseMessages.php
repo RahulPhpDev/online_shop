@@ -12,7 +12,7 @@ use BenSampo\Enum\Enum;
 final class ResponseMessages extends Enum
 {
     const REGISTERED =  'REGISTERED';
-    const NOTVALID =   'Not valid';
+    const NOTVALID =   'validation failed';
     const CARTRESPONSE = 'Cart Date';
     const PAGES = 'pages';
     const EMPTY  = 'empty';
